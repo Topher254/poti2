@@ -7,6 +7,7 @@ export const ABOUT_TEXT = `I am a dedicated and versatile full stack developer w
 import project1 from "../assets/invata.jpeg";
 import project2 from "../assets/jgusa.jpeg";
 import project3 from "../assets/topeats.jpeg";
+import project4 from "../assets/kanpai.jpeg";
 
 export const EXPERIENCES = [
   {
@@ -62,6 +63,13 @@ export const PROJECTS = [
     description:
       "A personal portfolio website showcasing projects, skills, and contact information.",
     link: ["https://top-eats-psi.vercel.app/"],
+  },
+  {
+    title: "Kanpai Technologies Website",
+    image: project4,
+    description:
+      "A personal portfolio website showcasing projects, skills, and contact information.",
+    link: ["https://kanpaitechnologies.vercel.app/"],
   },
   
 ];
