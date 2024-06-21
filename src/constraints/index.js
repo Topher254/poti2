@@ -8,13 +8,22 @@ import project1 from "../assets/invata.jpeg";
 import project2 from "../assets/jgusa.jpeg";
 import project3 from "../assets/topeats.jpeg";
 import project4 from "../assets/kanpai.jpeg";
+import project5 from "../assets/dahari.jpeg";
+import project6 from "../assets/helpnet.jpeg";
 
 export const EXPERIENCES = [
   {
-    year: "July 2023 -  Present",
+    year: "May 2024 -  Present",
+    role: "Font-End Developer Intern",
+    company: "Nuricha Technologies",
+    description: `Contributed to the development of web applications using JavaScript, React.js, and tailwind CSS.`,
+    technologies: [""],
+  },
+  {
+    year: "July 2023 -  December 2023",
     role: "Font-End Developer",
     company: "Invata Engineering",
-    description: `Contributed to the development of web applications using JavaScript, React.js, and tailwind CSS.`,
+    description: `Contributed to the development of the company website.`,
     technologies: [""],
   },
   {
@@ -70,6 +79,20 @@ export const PROJECTS = [
     description:
       "A personal portfolio website showcasing projects, skills, and contact information.",
     link: ["https://kanpaitechnologies.vercel.app/"],
+  },
+  {
+    title: "Dahari Developers Website",
+    image: project5,
+    description:
+      "A personal portfolio website showcasing projects, skills, and contact information.",
+    link: ["https://daharidevelopers.vercel.app/"],
+  },
+  {
+    title: "HelpNet Charity Website",
+    image: project6,
+    description:
+      "A personal portfolio website showcasing projects, skills, and contact information.",
+    link: ["https://helpnet.vercel.app/"],
   },
   
 ];
