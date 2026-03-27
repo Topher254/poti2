@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import API from '../services/api';
 
 const AuthContext = createContext();
 
@@ -8,14 +9,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = (email, password) => {
-    // Hardcoded admin credentials
-    if (email === 'raphaelsarota@gmail.com' && password === 'Topher254') {
-      localStorage.setItem('admin', JSON.stringify({ email }));
-      setUser({ email });
-      return true;
+  const login = async (email, password) => {
+    try {
+      const res = await API.post('/auth/login', { email, password });
+      if (res.data.email) {
+        localStorage.setItem('admin', JSON.stringify({ email: res.data.email }));
+        setUser({ email: res.data.email });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Login error:', err.response?.data);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
@@ -25,11 +31,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = () => {
     const stored = localStorage.getItem('admin');
-    if (stored) setUser(JSON.parse(stored));
+    if (stored) {
+      setUser(JSON.parse(stored));
+    }
     setLoading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkAuth();
   }, []);
 
