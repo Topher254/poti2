@@ -129,14 +129,9 @@ const BlogPage = () => {
                   {post.excerpt}
                 </p>
 
-                {/* Read More link */}
-                <Link
-                  to={`/blog/${post._id}`}
-                  className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 font-medium text-sm transition-colors group-hover:gap-2"
-                >
-                  Read More
-                  <ChevronRight size={16} className="transition-transform group-hover:translate-x-1" />
-                </Link>
+            <Link to={`/blog/${post.slug}`} className="text-purple-500 hover:text-purple-400 font-medium">
+  Read More →
+</Link>
               </div>
             </div>
           ))}

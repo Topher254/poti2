@@ -29,7 +29,8 @@ function App() {
               <Route path="/software" element={<SoftwarePage />} />
               <Route path="/networking" element={<NetworkingPage />} />
               <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:id" element={<PostDetail />} />
+              {/* <Route path="/blog/:id" element={<PostDetail />} /> */}
+              <Route path="/blog/:slug" element={<PostDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route element={<AdminLayout />}>

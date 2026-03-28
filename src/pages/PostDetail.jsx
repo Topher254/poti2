@@ -4,7 +4,7 @@ import { Calendar, User, BookOpen, Download, Share2, Facebook, Twitter, Linkedin
 import API from '../services/api';
 
 const PostDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();                 // changed from id to slug
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showShareTop, setShowShareTop] = useState(false);
@@ -14,11 +14,11 @@ const PostDetail = () => {
   useEffect(() => {
     fetchPost();
     // eslint-disable-next-line
-  }, [id]);
+  }, [slug]);                                    // dependency changed to slug
 
   const fetchPost = async () => {
     try {
-      const res = await API.get(`/posts/${id}`);
+      const res = await API.get(`/posts/${slug}`);
       setPost(res.data);
     } catch (err) {
       console.error(err);
@@ -91,8 +91,8 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className=" min-h-screen flex items-center justify-center">
-        <div className=" text-xl animate-pulse">Loading post...</div>
+      <div className="bg-black min-h-screen flex items-center justify-center">
+        <div className="text-white text-xl animate-pulse">Loading post...</div>
       </div>
     );
   }
@@ -106,9 +106,8 @@ const PostDetail = () => {
   }
 
   return (
-    <div className="bg min-h-screen py-12 px-4">
+    <div className="bg-gradient-to-b from-gray-900 to-black min-h-screen py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Back button */}
         <Link
           to="/blog"
           className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors mb-6 group"
@@ -119,17 +118,13 @@ const PostDetail = () => {
           Back to Blog
         </Link>
 
-        {/* Main Card */}
-        <div className="bg-gray-80/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
-          {/* Header with gradient accent */}
-
+        <div className="bg-gray-200/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
           <div className="p-6 md:p-8">
-            {/* Title and meta */}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-black mb-4 leading-tight">
                 {post.title}
               </h1>
-              <div className="flex flex-wrap items-center justify-between gap-4 text-gray-400 text-sm border-b border-gray-700 pb-4">
+              <div className="flex flex-wrap items-center justify-between gap-4 text-gray-600 text-sm border-b border-gray-700 pb-4">
                 <div className="flex flex-wrap gap-4">
                   <span className="flex items-center gap-1">
                     <Calendar size={14} />
@@ -144,17 +139,14 @@ const PostDetail = () => {
                     {post.category === 'networking' ? 'Networking' : 'Software'}
                   </span>
                 </div>
-                {/* Share dropdown at top */}
                 <ShareDropdown show={showShareTop} setShow={setShowShareTop} position="bottom" />
               </div>
             </div>
 
-            {/* Content */}
             <div className="prose prose-invert prose-lg max-w-none">
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
 
-            {/* Attachments */}
             {post.attachments && post.attachments.length > 0 && (
               <div className="mt-8 border-t border-gray-700 pt-6">
                 <h3 className="text-white text-lg font-semibold mb-3 flex items-center gap-2">
@@ -167,7 +159,7 @@ const PostDetail = () => {
                         href={att.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-b-2 border-blue-500  transition-colors bg-gray-300/50 px-3 py-1.5 rounded-t-lg"
+                        className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors bg-gray-700/50 px-3 py-1.5 rounded-lg"
                       >
                         <Download size={14} />
                         {att.originalName}
@@ -178,13 +170,12 @@ const PostDetail = () => {
               </div>
             )}
 
-            {/* Bottom actions: Share & PDF */}
             <div className="mt-8 pt-6 border-t border-gray-700 flex flex-wrap items-center justify-between gap-4">
               <div className="flex gap-3">
                 <ShareDropdown show={showShareBottom} setShow={setShowShareBottom} position="top" />
                 <button
                   onClick={downloadAsPDF}
-                  className="flex items-center gap-2 text-gray-400 hover:text-purple-500  transition-colors bg-gray-800 px-3 py-1.5 rounded-lg"
+                  className="flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors bg-gray-800 px-3 py-1.5 rounded-lg"
                 >
                   <FileText size={16} />
                   Save as PDF
@@ -197,7 +188,6 @@ const PostDetail = () => {
           </div>
         </div>
 
-        {/* Optional footer note */}
         <div className="text-center text-gray-500 text-sm mt-8">
           © {new Date().getFullYear()} Sarota Raphael. All rights reserved.
         </div>
