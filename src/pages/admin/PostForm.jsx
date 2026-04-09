@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import API from '../../services/api';
+import API from '../../services/api'
+import Toast from '../../components/Toast';
 
 const PostForm = () => {
   const { id } = useParams();
@@ -16,29 +17,26 @@ const PostForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      fetchPost();
-    }
+    if (id) fetchPost();
   }, [id]);
 
   const fetchPost = async () => {
+    setLoading(true);
     try {
       const res = await API.get(`/posts/${id}`);
       setFormData(res.data);
     } catch (err) {
-      console.error(err);
+      setToast({ message: 'Failed to load post', type: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleContentChange = (value) => {
-    setFormData({ ...formData, content: value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleContentChange = (value) => setFormData({ ...formData, content: value });
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -52,8 +50,9 @@ const PostForm = () => {
         ...formData,
         attachments: [...formData.attachments, res.data]
       });
+      setToast({ message: 'File uploaded', type: 'success' });
     } catch (err) {
-      console.error(err);
+      setToast({ message: 'Upload failed', type: 'error' });
     } finally {
       setFileUploading(false);
     }
@@ -71,12 +70,14 @@ const PostForm = () => {
     try {
       if (id) {
         await API.put(`/posts/${id}`, formData);
+        setToast({ message: 'Post updated!', type: 'success' });
       } else {
         await API.post('/posts', formData);
+        setToast({ message: 'Post created!', type: 'success' });
       }
-      navigate('/admin/posts');
+      setTimeout(() => navigate('/admin/posts'), 1500);
     } catch (err) {
-      console.error(err);
+      setToast({ message: err.response?.data?.error || 'Save failed', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -88,6 +89,7 @@ const PostForm = () => {
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image'],
+      ['code-block'],
       ['clean']
     ]
   };
@@ -99,83 +101,42 @@ const PostForm = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-gray-300 mb-2">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full bg-gray-800 text-white px-4 py-2 rounded"
-              required
-            />
+            <input type="text" name="title" value={formData.title} onChange={handleChange} className="w-full bg-gray-800 text-white px-4 py-2 rounded" required />
           </div>
           <div>
             <label className="block text-gray-300 mb-2">Excerpt</label>
-            <textarea
-              name="excerpt"
-              value={formData.excerpt}
-              onChange={handleChange}
-              rows="3"
-              className="w-full bg-gray-800 text-white px-4 py-2 rounded"
-              required
-            />
+            <textarea name="excerpt" value={formData.excerpt} onChange={handleChange} rows="3" className="w-full bg-gray-800 text-white px-4 py-2 rounded" required />
           </div>
           <div>
             <label className="block text-gray-300 mb-2">Category</label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full bg-gray-800 text-white px-4 py-2 rounded"
-            >
+            <select name="category" value={formData.category} onChange={handleChange} className="w-full bg-gray-800 text-white px-4 py-2 rounded">
               <option value="networking">Networking</option>
               <option value="software">Software</option>
             </select>
           </div>
           <div>
             <label className="block text-gray-300 mb-2">Content</label>
-            <ReactQuill
-              theme="snow"
-              value={formData.content}
-              onChange={handleContentChange}
-              modules={modules}
-              className="bg-white text-black rounded"
-            />
+            <ReactQuill theme="snow" value={formData.content} onChange={handleContentChange} modules={modules} className="bg-white text-black rounded" />
           </div>
           <div>
             <label className="block text-gray-300 mb-2">Attachments</label>
-            <input
-              type="file"
-              onChange={handleFileUpload}
-              disabled={fileUploading}
-              className="text-gray-300"
-            />
+            <input type="file" onChange={handleFileUpload} disabled={fileUploading} className="text-gray-300" />
             {fileUploading && <p className="text-gray-400 text-sm mt-1">Uploading...</p>}
             <div className="mt-2 space-y-2">
               {formData.attachments.map((att, idx) => (
                 <div key={idx} className="flex justify-between items-center bg-gray-800 p-2 rounded">
-                  <a href={att.path} target="_blank" rel="noopener noreferrer" className="text-blue-400">
-                    {att.originalName}
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => removeAttachment(idx)}
-                    className="text-red-400 text-sm"
-                  >
-                    Remove
-                  </button>
+                  <a href={att.path} target="_blank" rel="noopener noreferrer" className="text-blue-400">{att.originalName}</a>
+                  <button type="button" onClick={() => removeAttachment(idx)} className="text-red-400 text-sm">Remove</button>
                 </div>
               ))}
             </div>
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded"
-          >
+          <button type="submit" disabled={loading} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded disabled:opacity-50">
             {loading ? 'Saving...' : 'Save'}
           </button>
         </form>
       </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 };

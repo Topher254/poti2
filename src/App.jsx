@@ -16,6 +16,7 @@ import PostList from './pages/admin/PostList';
 import PostForm from './pages/admin/PostForm';
 import ProjectList from './pages/admin/ProjectList';
 import ProjectForm from './pages/admin/ProjectForm';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
@@ -29,18 +30,17 @@ function App() {
               <Route path="/software" element={<SoftwarePage />} />
               <Route path="/networking" element={<NetworkingPage />} />
               <Route path="/blog" element={<BlogPage />} />
-              {/* <Route path="/blog/:id" element={<PostDetail />} /> */}
               <Route path="/blog/:slug" element={<PostDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route element={<AdminLayout />}>
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/posts" element={<PostList />} />
-                <Route path="/admin/posts/new" element={<PostForm />} />
-                <Route path="/admin/posts/edit/:id" element={<PostForm />} />
-                <Route path="/admin/projects" element={<ProjectList />} />
-                <Route path="/admin/projects/new" element={<ProjectForm />} />
-                <Route path="/admin/projects/edit/:id" element={<ProjectForm />} />
+                <Route path="/admin/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+                <Route path="/admin/posts" element={<ErrorBoundary><PostList /></ErrorBoundary>} />
+                <Route path="/admin/posts/new" element={<ErrorBoundary><PostForm /></ErrorBoundary>} />
+                <Route path="/admin/posts/edit/:id" element={<ErrorBoundary><PostForm /></ErrorBoundary>} />
+                <Route path="/admin/projects" element={<ErrorBoundary><ProjectList /></ErrorBoundary>} />
+                <Route path="/admin/projects/new" element={<ErrorBoundary><ProjectForm /></ErrorBoundary>} />
+                <Route path="/admin/projects/edit/:id" element={<ErrorBoundary><ProjectForm /></ErrorBoundary>} />
               </Route>
             </Routes>
           </main>
